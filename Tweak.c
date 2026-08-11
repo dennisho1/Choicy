@@ -627,9 +627,9 @@ __attribute__((constructor)) static void initializer(void)
 #ifdef __arm64e__
 				// Second: dyld_dynamic_interpose seems to cause a nullptr deref in arm64e processes
 				// So, we have to use a litehook rebind instead
-				litehook_rebind_symbol((const mach_header *)tweakLoaderHeader, dlopen, dlopen_hook);
+				litehook_rebind_symbol((const mach_header_u *)tweakLoaderHeader, dlopen, dlopen_hook, NULL);
 				if (dlopen_from) {
-					litehook_rebind_symbol((const mach_header *)tweakLoaderHeader, dlopen_from, dlopen_from_hook);
+					litehook_rebind_symbol((const mach_header_u *)tweakLoaderHeader, dlopen_from, dlopen_from_hook, NULL);
 				}
 				return;
 #endif
