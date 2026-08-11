@@ -12,6 +12,12 @@
 	return %orig;
 }
 
+- (id)executeLaunchRequest:(RBSLaunchRequest *)launchRequest withCompletion:(NSError **)errorOut
+{
+	choicy_applyEnvironmentChangesToLaunchContext(launchRequest.context);
+	return %orig;
+}
+
 %end
 
 void choicy_initRunningBoardd(void)
