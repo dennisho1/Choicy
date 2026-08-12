@@ -13,7 +13,7 @@ Choicy_CFLAGS = -DTHEOS_LEAN_AND_MEAN -I./external/litehook/src -I./external/lit
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 SUBPROJECTS += ChoicyPrefs
-SUBPROJECTS += ChoicySB
+#SUBPROJECTS += ChoicySB
 include $(THEOS_MAKE_PATH)/aggregate.mk
 
 internal-stage::
