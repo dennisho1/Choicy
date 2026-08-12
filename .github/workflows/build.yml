@@ -17,6 +17,7 @@ jobs:
       - name: Build
         run: |
            mv xpc $THEOS/include/xpc
+           cp external/litehook/src/litehook.h $THEOS/include/
            sh gen_asm.sh
            sh release_build.sh
 
