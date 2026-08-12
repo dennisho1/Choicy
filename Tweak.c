@@ -72,6 +72,7 @@ char *gBundleIdentifier = NULL;
 int gProcessType = 0;
 
 bool gTweakInjectionDisabled = false;
+bool gOverwriteGlobalConfig = false;
 xpc_object_t gAllowedTweaks = NULL;
 xpc_object_t gDeniedTweaks = NULL;
 xpc_object_t gGlobalDeniedTweaks = NULL;
@@ -210,6 +211,7 @@ void load_global_preferences(xpc_object_t preferencesXdict, xpc_object_t process
 		overwriteGlobalConfig = xpc_dictionary_get_bool(processPreferencesXdict, kChoicyProcessPrefsKeyOverwriteGlobalTweakConfiguration);
 	}
 
+	gOverwriteGlobalConfig = overwriteGlobalConfig;
 	if (!overwriteGlobalConfig) {
 		xpc_object_t globalDeniedTweaks = xpc_dictionary_get_value(preferencesXdict, kChoicyPrefsKeyGlobalDeniedTweaks);
 		if (globalDeniedTweaks && xpc_get_type(globalDeniedTweaks) == XPC_TYPE_ARRAY) {
@@ -424,13 +426,7 @@ bool should_load_dylib(const char *dylibPath)
 		// dylibs crucial for Choicy itself to work
 		if (gProcessType == PROCESS_TYPE_APP) {
 			if (!strcmp(gBundleIdentifier, kPreferencesBundleID)) {
-				if (!strcmp(dylibName, "PreferenceLoader") || !strcmp(dylibName, "preferred")) {
-					os_log_dbg("%{public}s.dylib ✅ (crucial)", dylibName);
-					return true;
-				}
-			}
-			else if (!strcmp(gBundleIdentifier, kSpringboardBundleID)) {
-				if (!strcmp(dylibName, "ChoicySB")) {
+				if (!strcmp(dylibName, "PreferenceLoader")) {
 					os_log_dbg("%{public}s.dylib ✅ (crucial)", dylibName);
 					return true;
 				}
@@ -446,19 +442,26 @@ bool should_load_dylib(const char *dylibPath)
 		bool tweakIsDenied = xpc_array_contains_string(gDeniedTweaks, dylibName);
 		bool tweakIsGloballyDenied = xpc_array_contains_string(gGlobalDeniedTweaks, dylibName);
 
-		if (tweakIsGloballyDenied) {
-			os_log_dbg("%{public}s.dylib ❌ (disabled in global tweak configuration)", dylibName);
-			return false;
+		if (gOverwriteGlobalConfig) {
+			if (gAllowedTweaks && !tweakIsAllowed) {
+		        os_log_dbg("%{public}s.dylib ❌ (not in allow list, overwrite on)", dylibName);
+		        return false;
+		    }
+		    if (gDeniedTweaks && tweakIsDenied) {
+		        os_log_dbg("%{public}s.dylib ❌ (in deny list, overwrite on)", dylibName);
+		        return false;
+		    }
 		}
-
-		if (gAllowedTweaks && !tweakIsAllowed) {
-			os_log_dbg("%{public}s.dylib ❌ (custom tweak configuration on allow and tweak not allowed)", dylibName);
-			return false;
-		}
-
-		if (gDeniedTweaks && tweakIsDenied) {
-			os_log_dbg("%{public}s.dylib ❌ (custom tweak configuration on deny and tweak denied)", dylibName);
-			return false;
+		else {
+			if (tweakIsGloballyDenied && !(gAllowedTweaks && tweakIsAllowed)) {
+				os_log_dbg("%{public}s.dylib ❌ (disabled in global tweak configuration)", dylibName);
+				return false;
+			}
+	
+			if (gDeniedTweaks && tweakIsDenied) {
+				os_log_dbg("%{public}s.dylib ❌ (custom tweak configuration on deny and tweak denied)", dylibName);
+				return false;
+			}
 		}
 	}
 	else {
