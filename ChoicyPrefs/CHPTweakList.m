@@ -154,12 +154,6 @@
 
 - (BOOL)isTweak:(CHPTweakInfo *)tweak hiddenForApplicationWithIdentifier:(NSString *)applicationID
 {
-	if ([applicationID isEqualToString:kSpringboardBundleID]) {
-		if ([kAlwaysInjectSpringboard containsObject:tweak.dylibName]) {
-			return YES;
-		}
-	}
-
 	if ([applicationID isEqualToString:kPreferencesBundleID]) {
 		if ([kAlwaysInjectPreferences containsObject:tweak.dylibName]) {
 			return YES;
@@ -171,10 +165,6 @@
 
 - (BOOL)isTweakHiddenForAnyProcess:(CHPTweakInfo *)tweak
 {
-	if ([self isTweak:tweak hiddenForApplicationWithIdentifier:kSpringboardBundleID]) {
-		return YES;
-	}
-
 	if ([self isTweak:tweak hiddenForApplicationWithIdentifier:kPreferencesBundleID]) {
 		return YES;
 	}
