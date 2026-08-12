@@ -120,6 +120,18 @@
 			<string>LAUNCH_WITH_TWEAKS_OPTION</string>
 		</dict>
 		<dict>
+		  <key>cell</key>
+		  <string>PSSwitchCell</string>
+		  <key>PostNotification</key>
+		  <string>com.opa334.choicyprefs/ReloadPrefs</string>
+		  <key>default</key>
+		  <false/>
+		  <key>key</key>
+		  <string>shouldLog</string>
+		  <key>label</key>
+		  <string>Logging</string>
+		</dict>
+		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
