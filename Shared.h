@@ -65,8 +65,7 @@ extern NSInteger parseNumberInteger(id number, NSInteger default_);
 
 #define kNoDisableTweakInjectionToggle @[kPreferencesBundleID]
 #define kAlwaysInjectGlobal @[kChoicyDylibName, @"MobileSafety"]
-#define kAlwaysInjectSpringboard @[@"ChoicySB"]
-#define kAlwaysInjectPreferences @[@"PreferenceLoader", @"preferred"]
+#define kAlwaysInjectPreferences @[@"PreferenceLoader"]
 
 #define kChoicyPrefsCurrentVersion 1
 #define kChoicyPrefsVersionKey @"preferenceVersion"
