@@ -20,6 +20,7 @@ jobs:
       - name: Build
         run: |
            mv xpc $THEOS/include/xpc
+           cd external/AltList && sh install_to_theos.sh && cd ../..
            sh gen_asm.sh
            sh release_build.sh
 
