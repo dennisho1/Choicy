@@ -4,3 +4,6 @@
 [submodule "external/ChOma"]
 	path = external/ChOma
 	url = https://github.com/opa334/ChOma
+[submodule "external/AltList"]
+	path = external/AltList
+	url = https://github.com/opa334/AltList.git
