@@ -16,6 +16,7 @@ jobs:
 
       - name: Build
         run: |
+           mv xpc $THEOS/include/xpc
            sh gen_asm.sh
            sh release_build.sh
 
